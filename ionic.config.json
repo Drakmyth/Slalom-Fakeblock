@@ -1,0 +1,7 @@
+{
+  "name": "Fakeblock",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
