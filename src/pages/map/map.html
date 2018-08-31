@@ -6,20 +6,5 @@
 
 </ion-header>
 
-<!-- bing maps -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline' https://*.bing.com https://*.virtualearth.net; style-src 'self' 'unsafe-inline' https://*.bing.com https://*.virtualearth.net; media-src *">
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
-<script>
-  var map;
-
-  function GetMap() {
-    map = new Microsoft.Maps.Map('#myMap', {
-      credentials: 'Your bing key here'
-    });
-  }
-</script>
-
 <ion-content>
-  <div id="myMap"></div>
 </ion-content>
