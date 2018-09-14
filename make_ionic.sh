@@ -43,6 +43,7 @@ detect_os() {
 
 install_depend() {
   package=$1
+
   printf "Detecting OS Package Manager: "
   packman="$(detect_os)"
   if $(isinstalled $packman); then
