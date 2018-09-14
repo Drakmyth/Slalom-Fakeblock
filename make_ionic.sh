@@ -12,13 +12,51 @@
 
 API_FILE="keys.do_not_commit.json"
 API_KEY="google_maps_api"
-MAPS_VERSION="4.9.1"
+MAPS_VERSION="latest"
 PARSE_ONLY=false
 usage() { 
   printf "Usage: $0 \n\t-i input_api.json\tDefault=$API_FILE\n" 1>&2
   printf "\t-m maps_api_version\tDefault=$MAPS_VERSION\n" 1>&2
   printf "\t-p Parse key only\tDefault=$PARSE_ONLY\n" 1>&2
   exit 1
+}
+
+detect_os() {
+  case $(uname) in
+    'Darwin')
+      PM="brew"
+      ;;
+    'Linux')
+      if $(isinstalled "apt-get"); then
+        PM="apt-get"
+      elif $(isinstalled "yum"); then
+        PM="yum"
+      fi
+      ;;
+    *)
+      echo "Error: Failed to detect OS!"
+      exit 1
+  esac
+  echo $PM
+}
+
+install_depend() {
+  package=$1
+  printf "Detecting OS Package Manager: "
+  packman="$(detect_os)"
+  if $(isinstalled $packman); then
+    echo "$packman"
+  else
+    echo "FAIL"
+    echo "Error: $packman not installed"
+    exit 1
+  fi
+  CMD="$packman install $package"
+  eval $CMD
+  if ! $(isinstalled $package); then
+    echo "Failled to install $package via $packman"
+    exit 1
+  fi
 }
 
 install_ionic() {
@@ -28,12 +66,16 @@ install_ionic() {
   depends='npm'
   #printf "Testing dependency: $depends "
   if ! $(isinstalled $depends); then
-    echo "FAIL"
-    echo "Error: Dependency not met: $depends"
-    exit 1
+    echo "Not Found, installing depends: $depends"
+    install_depend $depends
+    if ! $(isinstalled $depends); then
+      echo "FAIL"
+      echo "Error: Dependency not met: $depends"
+      exit 1
+    fi
   fi
 
-  CMD="npm install @ionic-native/core @ionic-native/google-maps@${maps_v}"
+  CMD="npm install --save @ionic-native/core @ionic-native/google-maps@${maps_v}"
   eval $CMD
   CMD="ionic cordova plugin add cordova-plugin-googlemaps --variable API_KEY_FOR_ANDROID=\"$i_key\" --variable API_KEY_FOR_IOS=\"$i_key\""
   eval $CMD
@@ -62,7 +104,6 @@ parse_key_file() {
   depends='jq'
   #printf "Testing dependency: $depends "
   if $(isinstalled $depends); then
-    #echo "OK"
     CMD="jq -r '.[].${p_key}' ${p_file}"
   else
     echo "FAIL"
@@ -112,5 +153,4 @@ if [[ -z $api_key ]]; then
   usage
 fi
 
-echo "API Key: $api_key"
 install_ionic "$api_key"
