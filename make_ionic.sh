@@ -74,9 +74,11 @@ install_ionic() {
       exit 1
     fi
   fi
-
+  
+  echo "Installing ionic:"
   CMD="npm install --save @ionic-native/core @ionic-native/google-maps@${maps_v}"
   eval $CMD
+  echo "Initiating plugin:"
   CMD="ionic cordova plugin add cordova-plugin-googlemaps --variable API_KEY_FOR_ANDROID=\"$i_key\" --variable API_KEY_FOR_IOS=\"$i_key\""
   eval $CMD
 }
