@@ -37,6 +37,7 @@ detect_os() {
     *)
       echo "Error: Failed to detect OS!"
       exit 1
+      ;;
   esac
   echo $PM
 }
