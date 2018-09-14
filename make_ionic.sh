@@ -14,6 +14,7 @@ API_FILE="keys.do_not_commit.json"
 API_KEY="google_maps_api"
 MAPS_VERSION="latest"
 PARSE_ONLY=false
+
 usage() { 
   printf "Usage: $0 \n\t-i input_api.json\tDefault=$API_FILE\n" 1>&2
   printf "\t-m maps_api_version\tDefault=$MAPS_VERSION\n" 1>&2
