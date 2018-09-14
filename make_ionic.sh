@@ -13,8 +13,13 @@
 API_FILE="keys.do_not_commit.json"
 API_KEY="google_maps_api"
 MAPS_VERSION="4.9.1"
-
-usage() { printf "Usage: $0 \n\t-i input_api.json\tDefault=$API_FILE\n\t-m maps_api_version\tDefault=$MAPS_VERSION\n" 1>&2; exit 1; }
+PARSE_ONLY=false
+usage() { 
+  printf "Usage: $0 \n\t-i input_api.json\tDefault=$API_FILE\n" 1>&2
+  printf "\t-m maps_api_version\tDefault=$MAPS_VERSION\n" 1>&2
+  printf "\t-p Parse key only\tDefault=$PARSE_ONLY\n" 1>&2
+  exit 1
+}
 
 install_ionic() {
   i_key=$1
@@ -69,13 +74,16 @@ parse_key_file() {
 }
 
 ### Parse CLI Options  ###
-while getopts ":hi:" o; do
+while getopts ":hi:p" o; do
   case "${o}" in
     h)
       usage 
       ;;
     i)
       API_FILE=${OPTARG}
+      ;;
+    p)
+      PARSE_ONLY=true
       ;;
     *)
       usage
@@ -92,6 +100,11 @@ fi
 
 echo "Parsing API Credentials: $API_FILE"
 api_key="$(parse_key_file $API_FILE $API_KEY)"
+
+if $PARSE_ONLY; then
+  echo $api_key
+  exit 0
+fi
 
 # Confirm receipt of api_file
 if [[ -z $api_key ]]; then
